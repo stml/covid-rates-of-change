@@ -1,8 +1,14 @@
 <div class="container" style="width: 100%">
 
+<div class="row">
+  <div class="column">
+
 <p>Demo: <a href="https://stml.github.io/covid-rates-of-change/">https://stml.github.io/covid-rates-of-change/</a></p>
 
 <p>Data is from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a> /  / Code at <a href="https://github.com/stml/covid-rates-of-change">GitHub</a> / To update, download ECDPC .csv and rename <code>data/covid.csv</code>.</p>
+
+  </div>
+</div>
 
 <script src="scripts/jquery.js" type="text/javascript"></script>
 <script src="scripts/d3.min.js"></script>
