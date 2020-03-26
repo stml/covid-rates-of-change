@@ -5,8 +5,6 @@
 
 <p>Demo: <a href="https://stml.github.io/covid-rates-of-change/">https://stml.github.io/covid-rates-of-change/</a></p>
 
-<p>Data is from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a> /  <a href="https://github.com/stml/covid-rates-of-change">Code at GitHub</a> / To update, download ECDPC .csv and rename <code>data/covid.csv</code>.</p>
-
   </div>
 </div>
 
@@ -21,13 +19,18 @@
 
   <div class="row">
     <div class="column">
-    <p>Cumulative number of cases, by number of days since
+    <p>Cumulative number of
+      <select id="casesdeaths">
+        <option value="Cases" selected>cases</option>
+        <option value="Deaths">deaths</option>
+      </select>, by number of days since
       <select id="first_limit">
-        <option value="1">1st</option>
-        <option value="10">10th</option>
-        <option value="100" selected>100th</option>
-        <option value="1000">1000th</option>
-      </select> case.</p>
+        <option value="1">1</option>
+        <option value="10">10</option>
+        <option value="100" selected>100</option>
+        <option value="1000">1000</option>
+      </select> <span id="casedeath">case</span>.</p>
+    <p>Data from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a> / Code at <a href="https://github.com/stml/covid-rates-of-change">GitHub</a>.</p>
     <p>Data last updated <span id="latest_update">..</span>.</p>
   </div>
   </div>

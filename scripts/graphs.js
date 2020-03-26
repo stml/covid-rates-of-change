@@ -1,10 +1,13 @@
 var first_limit = 100;
 
 var svg;
+var casesdeaths = 'Cases';
+var cd = ['cumulativeCases','cumulativeDeaths'];
+var r;
 
 $( document ).ready(function() {
 
-  prepData();
+  prepData(casesdeaths);
 
   $( "#select-all" ).click(function() {
     $('.line').removeClass('grey_line');
@@ -60,12 +63,19 @@ $( document ).ready(function() {
   $('#first_limit').change( function() {
     first_limit = this.value;
     clearGraph();
-    prepData();
+    prepData(casesdeaths);
+    });
+
+  $('#casesdeaths').change( function() {
+    casesdeaths = this.value;
+    $('#casedeath').html(casesdeaths.toLowerCase());
+    clearGraph();
+    prepData(casesdeaths);
     });
 
   });
 
-function prepData() {
+function prepData(casesdeaths) {
   //Read the data
   d3.csv("data/covid.csv").then(function(csv_data) {
 
@@ -109,9 +119,16 @@ function prepData() {
     // trim to just the dates we want
     var cases_data = [];
 
-    // New array only with entries where cumulative total cases >= 100
+    // are we doing cases or deaths?
+    if (casesdeaths == 'Cases') {
+      r = '0';
+    } else {
+      r = '1';
+    }
+
+    // New array only with entries where cumulative total >= 100
     csv_data.forEach(function(d) {
-      if (d.cumulativeCases >= first_limit) {
+      if (d[cd[r]] >= first_limit) {
         cases_data.push(d)
         }
       });
@@ -203,7 +220,7 @@ svg = d3.select("#graph")
   // Add Y axis
   var y = d3.scaleLog()
     .range([ height, 1 ])
-    .domain([first_limit, d3.max(cases_data, function(d) { return d.cumulativeCases; })]);
+    .domain([first_limit, d3.max(cases_data, function(d) { return d[cd[r]]; })]);
   svg.append("g")
     .call(d3.axisLeft(y).ticks(10, "~s"))
     .attr("id","y_axis");
@@ -212,7 +229,7 @@ svg = d3.select("#graph")
   // Add the lines
   var line = d3.line()
     .x(function(d) { return x(Math.ceil(Math.abs(d.DateRep - countries[d.GeoId].firstdate) / (1000 * 60 * 60 * 24))) })
-    .y(function(d) { return y(d.cumulativeCases) });
+    .y(function(d) { return y(d[cd[r]]) });
   svg.selectAll("myLines")
     .data(data)
     .enter()
@@ -233,7 +250,7 @@ svg = d3.select("#graph")
       .append("circle")
         .datum(function(d) { return {name: d.key, value: d.values[d.values.length - 1]}; }) // keep only the last value of each time series
         .attr("cx", function(d) { return x(Math.ceil(Math.abs(d.value.DateRep - countries[d.value.GeoId].firstdate) / (1000 * 60 * 60 * 24))) })
-        .attr("cy", function(d) { return y(d.value.cumulativeCases) })
+        .attr("cy", function(d) { return y(d.value[cd[r]]) })
         .attr("r", 2)
         .style("fill", function(d){ return myColor(d.name) })
         .attr("id", function(d){ return 'dot_'+d.name })
@@ -247,7 +264,7 @@ svg = d3.select("#graph")
       .append('g')
       .append("text")
         .datum(function(d) { return {name: d.key, value: d.values[d.values.length - 1]}; }) // keep only the last value of each time series
-        .attr("transform", function(d) { return "translate(" + x(Math.ceil(Math.abs(d.value.DateRep - countries[d.value.GeoId].firstdate) / (1000 * 60 * 60 * 24))) + "," + y(d.value.cumulativeCases) + ")"; }) // Put the text at the position of the last point
+        .attr("transform", function(d) { return "translate(" + x(Math.ceil(Math.abs(d.value.DateRep - countries[d.value.GeoId].firstdate) / (1000 * 60 * 60 * 24))) + "," + y(d.value[cd[r]]) + ")"; }) // Put the text at the position of the last point
         .attr("x", 6) // shift the text a bit more right
         .attr("y", 4) // shift the text a bit more right
         .text(function(d) { return d.value['Countries and territories'].replace(/\_/g, " ");; })
