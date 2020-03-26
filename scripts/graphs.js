@@ -8,11 +8,13 @@ $( document ).ready(function() {
 
   $( "#select-all" ).click(function() {
     $('.line').removeClass('grey_line');
+    $('.dot').removeClass('grey_line');
     $('.label').removeClass('grey_label');
     $('.country_checkbox').prop('checked', true);
     });
   $( "#deselect-all" ).click(function() {
     $('.line').addClass('grey_line');
+    $('.dot').addClass('grey_line');
     $('.label').addClass('grey_label');
     $('.country_checkbox').prop('checked', false);
     });
@@ -21,12 +23,15 @@ $( document ).ready(function() {
 
   $( "#personal" ).click(function() {
     $('.line').removeClass('grey_line');
+    $('.dot').removeClass('grey_line');
     $('.label').removeClass('grey_label');
     $('.line').addClass('grey_line');
+    $('.dot').addClass('grey_line');
     $('.label').addClass('grey_label');
     $('.country_checkbox').prop('checked', false);
     for (var i = 0; i < personal.length; i++) {
       $('#line_'+personal[i]).removeClass('grey_line');
+      $('#dot_'+personal[i]).removeClass('grey_line');
       $('#label_'+personal[i]).removeClass('grey_label');
       $('#check_'+personal[i]).prop('checked', true);
       }
@@ -48,6 +53,7 @@ $( document ).ready(function() {
     });
   $( "#toggle-colours" ).click(function() {
     $('.line').toggleClass('black_line');
+    $('.dot').toggleClass('black_label');
     $('.label').toggleClass('black_label');
     });
 
@@ -215,6 +221,21 @@ svg = d3.select("#graph")
       .style("fill", "none")
       .attr("id", function(d){ return 'line_'+d.key })
       .attr("class", "line");
+
+  // Add dot to end of lines
+  svg
+    .selectAll("myDots")
+    .data(data)
+    .enter()
+      .append('g')
+      .append("circle")
+        .datum(function(d) { return {name: d.key, value: d.values[d.values.length - 1]}; }) // keep only the last value of each time series
+        .attr("cx", function(d) { return x(Math.ceil(Math.abs(d.value.DateRep - countries[d.value.GeoId].firstdate) / (1000 * 60 * 60 * 24))) })
+        .attr("cy", function(d) { return y(d.value.cumulativeCases) })
+        .attr("r", 2)
+        .style("fill", function(d){ return myColor(d.name) })
+        .attr("id", function(d){ return 'dot_'+d.name })
+        .attr("class", "dot");
 
   // Add a legend at the end of each line
   svg
