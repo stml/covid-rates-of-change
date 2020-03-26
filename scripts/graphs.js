@@ -194,12 +194,12 @@ svg = d3.select("#graph")
 
   // Add Y axis
   var y = d3.scaleLog()
-    .base(2)
     .range([ height, 1 ])
     .domain([first_limit, d3.max(cases_data, function(d) { return d.cumulativeCases; })]);
   svg.append("g")
-    .call(d3.axisLeft(y))
+    .call(d3.axisLeft(y).ticks(10, "~s"))
     .attr("id","y_axis");
+
 
   // Add the lines
   var line = d3.line()
