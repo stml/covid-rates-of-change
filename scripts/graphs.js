@@ -22,9 +22,6 @@ $( document ).ready(function() {
     $('.line').addClass('grey_line');
     $('.label').addClass('grey_label');
     $('.country_checkbox').prop('checked', false);
-    $('#line_GR').removeClass('grey_line');
-    $('#label_GR').removeClass('grey_label');
-    $('#check_GR').prop('checked', true);
     $('#line_UK').removeClass('grey_line');
     $('#label_UK').removeClass('grey_label');
     $('#check_UK').prop('checked', true);
@@ -34,6 +31,9 @@ $( document ).ready(function() {
     $('#line_FR').removeClass('grey_line');
     $('#label_FR').removeClass('grey_label');
     $('#check_FR').prop('checked', true);
+    $('#line_EL').removeClass('grey_line');
+    $('#label_EL').removeClass('grey_label');
+    $('#check_EL').prop('checked', true);
     $('#line_US').removeClass('grey_line');
     $('#label_US').removeClass('grey_label');
     $('#check_US').prop('checked', true);
