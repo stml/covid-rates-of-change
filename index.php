@@ -26,6 +26,7 @@
         <h3>Rates of Change</h3>
         <p>Cumulative number of cases, by number of days since <span id="first_limit">N</span>th case.</p>
         <p>Data from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a>.</p>
+        <p>Code at <a href="https://github.com/stml/covid-rates-of-change">GitHub</a>.</p>
       </div>
       </div>
 
