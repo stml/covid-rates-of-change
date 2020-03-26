@@ -31,6 +31,9 @@ h1, h2, h3, h4, h5, h6, strong {
 	font-family: "Bell Gothic Bold";
 	font-weight: normal;
 }
+p {
+  margin-bottom: 1rem;
+}
 
 #selectors {
   column-count: 4;

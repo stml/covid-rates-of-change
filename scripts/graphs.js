@@ -100,6 +100,7 @@ function prepData() {
         }
       });
 
+    // trim to just the dates we want
     var cases_data = [];
 
     // New array only with entries where cumulative total cases >= 100
@@ -109,22 +110,31 @@ function prepData() {
         }
       });
 
+    // New array for final graph data
     var data = [];
 
+    // sort data and nest by countries
     data = d3.nest()
       .key(function(d) { return d.GeoId; })
       .entries(cases_data);
 
+    // get earliest date from data for each country
     data.forEach(function(d) {
       countries[d.key]['firstdate'] = d.values[0].DateRep;
     });
 
+    // Get latest update date from data and write to page
+    var formatTime = d3.timeFormat("%B %d, %Y");
+    $('#latest_update').html(formatTime(d3.max(cases_data, function(d) { return d.DateRep; })));
+
     drawGraph(data,cases_data,countries);
 
+    // Add all the checkboxes
     for(country in countries) {
       $('#selectors').prepend('<li><label><input type="checkbox" class="country_checkbox" id="check_'+countries[country]['id']+'" name="'+countries[country]['id']+'" value="'+countries[country]['id']+'" checked> '+countries[country]['name'].replace(/\_/g,' ')+'</label> ('+countries[country]['cases']+' / '+countries[country]['deaths']+')</li>');
     }
 
+    // checkbox functions
     $('.country_checkbox').change(function() {
       if(this.checked) {
         $('#line_'+this.name).removeClass('grey_line');
