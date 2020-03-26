@@ -48,7 +48,7 @@ $('#first_limit').html(first_limit);
 // set the dimensions and margins of the graph
 var margin = {top: 25, right: 50, bottom: 35, left: 50},
     width = Math.round($("#graph").parent().width()) - margin.left - margin.right,
-    height = Math.round($("#graph").parent().width()/1.5) - margin.top - margin.bottom;
+    height = Math.round($("#graph").parent().width()/2) - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3.select("#graph")
