@@ -2,7 +2,7 @@
 
 <p>Demo: <a href="https://stml.github.io/covid-rates-of-change/">https://stml.github.io/covid-rates-of-change/</a></p>
 
-<p>Data is from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a>. To update, download CSV and rename `data/covid.csv`.</p>
+<p>Data is from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a> /  / Code at <a href="https://github.com/stml/covid-rates-of-change">GitHub</a> / To update, download ECDPC .csv and rename <code>data/covid.csv</code>.</p>
 
 <script src="scripts/jquery.js" type="text/javascript"></script>
 <script src="scripts/d3.min.js"></script>
@@ -15,7 +15,6 @@
 
   <div class="row">
     <div class="column">
-    <h3>Rates of Change</h3>
     <p>Cumulative number of cases, by number of days since
       <select id="first_limit">
         <option value="1">1st</option>
@@ -23,7 +22,6 @@
         <option value="100" selected>100th</option>
         <option value="1000">1000th</option>
       </select> case.</p>
-    <p>Data from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a> / Code at <a href="https://github.com/stml/covid-rates-of-change">GitHub</a>.</p>
     <p>Data last updated <span id="latest_update">..</span>.</p>
   </div>
   </div>
