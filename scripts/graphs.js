@@ -1,10 +1,10 @@
 var first_limit = 100;
 
-var countries = [];
+var svg;
 
 $( document ).ready(function() {
 
-  drawGraph();
+  prepData();
 
   $( "#select-all" ).click(function() {
     $('.line').removeClass('grey_line');
@@ -51,11 +51,97 @@ $( document ).ready(function() {
     $('.label').toggleClass('black_label');
     });
 
+  $('#first_limit').change( function() {
+    first_limit = this.value;
+    clearGraph();
+    prepData();
+    });
+
   });
 
-function drawGraph() {
+function prepData() {
+  //Read the data
+  d3.csv("data/covid.csv").then(function(csv_data) {
 
-$('#first_limit').html(first_limit);
+    // REVERSE FOR TIME ORDER!
+    csv_data.reverse();
+
+    // CSV Column Headers:
+    // DateRep,Day,Month,Year,Cases,Deaths,Countries and territories,GeoId
+
+    parseDate = d3.timeParse("%d/%m/%Y");
+
+    // (re-)initialise these arrays at each pass
+    var countries = [];
+    var cases_data = [];
+    var data = [];
+
+    // Parse csv contents, create countries array with cumulative totals.
+    csv_data.forEach(function(d) {
+      d.DateRep = parseDate(d.DateRep);
+      d.Day = +d.Day;
+      d.Month = +d.Month;
+      d.Year = +d.Year;
+      d.Cases = +d.Cases;
+      d.Deaths = +d.Deaths;
+      if (typeof countries[d.GeoId] != "undefined") {
+        countries[d.GeoId]['cases'] = countries[d.GeoId]['cases'] + d.Cases;
+        countries[d.GeoId]['deaths'] = countries[d.GeoId]['deaths'] + d.Deaths;
+        d.cumulativeCases = countries[d.GeoId]['cases'];
+        d.cumulativeDeaths = countries[d.GeoId]['deaths'];
+      } else {
+        countries[d.GeoId] = [];
+        countries[d.GeoId]['cases'] = d.Cases;
+        countries[d.GeoId]['deaths'] = d.Cases;
+        countries[d.GeoId]['id'] = d.GeoId;
+        countries[d.GeoId]['name'] = d['Countries and territories'];
+        d.cumulativeCases = countries[d.GeoId]['cases'];
+        d.cumulativeDeaths = countries[d.GeoId]['deaths'];
+        }
+      });
+
+    var cases_data = [];
+
+    // New array only with entries where cumulative total cases >= 100
+    csv_data.forEach(function(d) {
+      if (d.cumulativeCases >= first_limit) {
+        cases_data.push(d)
+        }
+      });
+
+    var data = [];
+
+    data = d3.nest()
+      .key(function(d) { return d.GeoId; })
+      .entries(cases_data);
+
+    data.forEach(function(d) {
+      countries[d.key]['firstdate'] = d.values[0].DateRep;
+    });
+
+    drawGraph(data,cases_data,countries);
+
+    for(country in countries) {
+      $('#selectors').prepend('<li><label><input type="checkbox" class="country_checkbox" id="check_'+countries[country]['id']+'" name="'+countries[country]['id']+'" value="'+countries[country]['id']+'" checked> '+countries[country]['name'].replace(/\_/g,' ')+'</label> ('+countries[country]['cases']+' / '+countries[country]['deaths']+')</li>');
+    }
+
+    $('.country_checkbox').change(function() {
+      if(this.checked) {
+        $('#line_'+this.name).removeClass('grey_line');
+        $('#label_'+this.name).removeClass('grey_label');
+      } else {
+        $('#line_'+this.name).addClass('grey_line');
+        $('#label_'+this.name).addClass('grey_label');
+      }});
+  });
+}
+
+function clearGraph() {
+  d3.selectAll("svg > *").remove();
+  $('#graph_box').remove();
+  }
+
+function drawGraph(data,cases_data,countries) {
 
 // set the dimensions and margins of the graph
 var margin = {top: 25, right: 50, bottom: 35, left: 50},
@@ -63,64 +149,14 @@ var margin = {top: 25, right: 50, bottom: 35, left: 50},
     height = Math.round($("#graph").parent().width()/2) - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-var svg = d3.select("#graph")
+svg = d3.select("#graph")
 .append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
+  .attr("id", "graph_box")
 .append("g")
   .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
-
-//Read the data
-d3.csv("data/covid.csv").then(function(csv_data) {
-
-  // REVERSE FOR TIME ORDER!
-  csv_data.reverse();
-
-  // CSV Column Headers:
-  // DateRep,Day,Month,Year,Cases,Deaths,Countries and territories,GeoId
-
-  parseDate = d3.timeParse("%d/%m/%Y");
-
-  // Parse csv contents, create countries array with cumulative totals.
-  csv_data.forEach(function(d) {
-    d.DateRep = parseDate(d.DateRep);
-    d.Day = +d.Day;
-    d.Month = +d.Month;
-    d.Year = +d.Year;
-    d.Cases = +d.Cases;
-    d.Deaths = +d.Deaths;
-    if (typeof countries[d.GeoId] != "undefined") {
-      countries[d.GeoId]['cases'] = countries[d.GeoId]['cases'] + d.Cases;
-      countries[d.GeoId]['deaths'] = countries[d.GeoId]['deaths'] + d.Deaths;
-      d.cumulativeCases = countries[d.GeoId]['cases'];
-      d.cumulativeDeaths = countries[d.GeoId]['deaths'];
-    } else {
-      countries[d.GeoId] = [];
-      countries[d.GeoId]['cases'] = d.Cases;
-      countries[d.GeoId]['deaths'] = d.Cases;
-      countries[d.GeoId]['id'] = d.GeoId;
-      countries[d.GeoId]['name'] = d['Countries and territories'];
-      d.cumulativeCases = countries[d.GeoId]['cases'];
-      d.cumulativeDeaths = countries[d.GeoId]['deaths'];
-      }
-    });
-
-  var cases_data = [];
-  // New array only with entries where cumulative total cases >= 100
-  csv_data.forEach(function(d) {
-    if (d.cumulativeCases >= first_limit) {
-      cases_data.push(d)
-      }
-    });
-
-  var data = d3.nest()
-    .key(function(d) { return d.GeoId; })
-    .entries(cases_data);
-
-  data.forEach(function(d) {
-    countries[d.key]['firstdate'] = d.values[0].DateRep;
-  });
 
   // A color scale: one color for each group
   var myColor = d3.scaleOrdinal()
@@ -186,21 +222,5 @@ d3.csv("data/covid.csv").then(function(csv_data) {
         .style("font-size", 12)
         .attr("id", function(d){ return 'label_'+d.name })
         .attr("class", "label");
-
-    for(country in countries) {
-      $('#selectors').prepend('<li><label><input type="checkbox" class="country_checkbox" id="check_'+countries[country]['id']+'" name="'+countries[country]['id']+'" value="'+countries[country]['id']+'" checked> '+countries[country]['name'].replace(/\_/g,' ')+'</label> ('+countries[country]['cases']+' / '+countries[country]['deaths']+')</li>');
-    }
-
-    $('.country_checkbox').change(function() {
-      if(this.checked) {
-        $('#line_'+this.name).removeClass('grey_line');
-        $('#label_'+this.name).removeClass('grey_label');
-      } else {
-        $('#line_'+this.name).addClass('grey_line');
-        $('#label_'+this.name).addClass('grey_label');
-      }});
-
-});
-
 
 }
