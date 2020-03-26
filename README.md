@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="width: 100%">
 
 <p>Demo: <a href="https://stml.github.io/covid-rates-of-change/">https://stml.github.io/covid-rates-of-change/</a></p>
 
