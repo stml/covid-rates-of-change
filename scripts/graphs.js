@@ -16,27 +16,20 @@ $( document ).ready(function() {
     $('.label').addClass('grey_label');
     $('.country_checkbox').prop('checked', false);
     });
+
+  var personal = ['UK','IT','FR','EL','US'];
+
   $( "#personal" ).click(function() {
     $('.line').removeClass('grey_line');
     $('.label').removeClass('grey_label');
     $('.line').addClass('grey_line');
     $('.label').addClass('grey_label');
     $('.country_checkbox').prop('checked', false);
-    $('#line_UK').removeClass('grey_line');
-    $('#label_UK').removeClass('grey_label');
-    $('#check_UK').prop('checked', true);
-    $('#line_IT').removeClass('grey_line');
-    $('#label_IT').removeClass('grey_label');
-    $('#check_IT').prop('checked', true);
-    $('#line_FR').removeClass('grey_line');
-    $('#label_FR').removeClass('grey_label');
-    $('#check_FR').prop('checked', true);
-    $('#line_EL').removeClass('grey_line');
-    $('#label_EL').removeClass('grey_label');
-    $('#check_EL').prop('checked', true);
-    $('#line_US').removeClass('grey_line');
-    $('#label_US').removeClass('grey_label');
-    $('#check_US').prop('checked', true);
+    for (var i = 0; i < personal.length; i++) {
+      $('#line_'+personal[i]).removeClass('grey_line');
+      $('#label_'+personal[i]).removeClass('grey_label');
+      $('#check_'+personal[i]).prop('checked', true);
+      }
     });
 
   $( "#toggle-axes" ).click(function() {
