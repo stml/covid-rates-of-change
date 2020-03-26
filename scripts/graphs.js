@@ -144,9 +144,11 @@ function prepData() {
     $('.country_checkbox').change(function() {
       if(this.checked) {
         $('#line_'+this.name).removeClass('grey_line');
+        $('#dot_'+this.name).removeClass('grey_line');
         $('#label_'+this.name).removeClass('grey_label');
       } else {
         $('#line_'+this.name).addClass('grey_line');
+        $('#dot_'+this.name).addClass('grey_line');
         $('#label_'+this.name).addClass('grey_label');
       }});
   });
