@@ -44,6 +44,9 @@ h1, h2, h3, h4, h5, h6, strong {
   list-style: none;
   margin: 0;
   line-height: 1.25;
+  font-size: 0.8em;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .grey_line {
@@ -52,3 +55,11 @@ h1, h2, h3, h4, h5, h6, strong {
 .grey_label {
 	opacity: 0;
 	}
+.black_label {
+  color: #000 !important;
+  fill: rgb(0, 0, 0) !important;
+  }
+.black_line {
+  stroke: #000000 !important;
+  stroke-width: 1 !important;
+  }
