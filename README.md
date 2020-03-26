@@ -29,7 +29,7 @@
         <option value="10">10</option>
         <option value="100" selected>100</option>
         <option value="1000">1000</option>
-      </select> <span id="casedeath">case</span>.</p>
+      </select> <span id="casedeath">cases</span>.</p>
     <p>Data from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a> / Code at <a href="https://github.com/stml/covid-rates-of-change">GitHub</a>.</p>
     <p>Data last updated <span id="latest_update">..</span>.</p>
   </div>
