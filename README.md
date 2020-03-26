@@ -1,10 +1,8 @@
 <div class="container">
 
-# covid-rates-of-change
+<p>Demo: <a href="https://stml.github.io/covid-rates-of-change/">https://stml.github.io/covid-rates-of-change/</a></p>
 
-Demo: <a href="http://jamesbridle.com/sandbox/covid-rates-of-change/">http://jamesbridle.com/sandbox/covid-rates-of-change/</a>
-
-Data is from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a>. To update, download CSV and rename `data/covid.csv`.
+<p>Data is from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a>. To update, download CSV and rename `data/covid.csv`.</p>
 
 <script src="scripts/jquery.js" type="text/javascript"></script>
 <script src="scripts/d3.min.js"></script>
