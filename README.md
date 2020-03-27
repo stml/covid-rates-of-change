@@ -5,6 +5,8 @@
 
 <p>Demo: <a href="https://stml.github.io/covid-rates-of-change/">https://stml.github.io/covid-rates-of-change/</a></p>
 
+<p>To update data, download .csv from ECDPC, and replace <code>data/corvid.csv</code>. NB: data format changes often.</p>
+
   </div>
 </div>
 
@@ -31,7 +33,7 @@
         <option value="1000">1000</option>
       </select> <span id="casedeath">cases</span>.</p>
     <p>Data from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a> / Code at <a href="https://github.com/stml/covid-rates-of-change">GitHub</a>.</p>
-    <p>Data last updated <span id="latest_update">..</span>.</p>
+    <p>Latest data <span id="latest_update">..</span>.</p>
   </div>
   </div>
 

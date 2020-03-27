@@ -83,9 +83,9 @@ function prepData(casesdeaths) {
     csv_data.reverse();
 
     // CSV Column Headers:
-    // DateRep,Day,Month,Year,Cases,Deaths,Countries and territories,GeoId
+    // DateRep,Day,Month,Year,Cases,Deaths,Countries and territories,geoId
 
-    parseDate = d3.timeParse("%d/%m/%Y");
+    parseDate = d3.timeParse("%d-%m-%Y");
 
     // (re-)initialise these arrays at each pass
     var countries = [];
@@ -94,27 +94,28 @@ function prepData(casesdeaths) {
 
     // Parse csv contents, create countries array with cumulative totals.
     csv_data.forEach(function(d) {
-      d.DateRep = parseDate(d.DateRep);
-      d.Day = +d.Day;
-      d.Month = +d.Month;
-      d.Year = +d.Year;
-      d.Cases = +d.Cases;
-      d.Deaths = +d.Deaths;
-      if (typeof countries[d.GeoId] != "undefined") {
-        countries[d.GeoId]['cases'] = countries[d.GeoId]['cases'] + d.Cases;
-        countries[d.GeoId]['deaths'] = countries[d.GeoId]['deaths'] + d.Deaths;
-        d.cumulativeCases = countries[d.GeoId]['cases'];
-        d.cumulativeDeaths = countries[d.GeoId]['deaths'];
+      d.dateRep = parseDate(d.dateRep);
+      d.day = +d.day;
+      d.month = +d.month;
+      d.year = +d.year;
+      d.cases = +d.cases;
+      d.deaths = +d.deaths;
+      if (typeof countries[d.geoId] != "undefined") {
+        countries[d.geoId]['cases'] = countries[d.geoId]['cases'] + d.cases;
+        countries[d.geoId]['deaths'] = countries[d.geoId]['deaths'] + d.deaths;
+        d.cumulativeCases = countries[d.geoId]['cases'];
+        d.cumulativeDeaths = countries[d.geoId]['deaths'];
       } else {
-        countries[d.GeoId] = [];
-        countries[d.GeoId]['cases'] = d.Cases;
-        countries[d.GeoId]['deaths'] = d.Cases;
-        countries[d.GeoId]['id'] = d.GeoId;
-        countries[d.GeoId]['name'] = d['Countries and territories'];
-        d.cumulativeCases = countries[d.GeoId]['cases'];
-        d.cumulativeDeaths = countries[d.GeoId]['deaths'];
+        countries[d.geoId] = [];
+        countries[d.geoId]['cases'] = d.cases;
+        countries[d.geoId]['deaths'] = d.deaths;
+        countries[d.geoId]['id'] = d.geoId;
+        countries[d.geoId]['name'] = d.countriesAndTerritories;
+        d.cumulativeCases = countries[d.geoId]['cases'];
+        d.cumulativeDeaths = countries[d.geoId]['deaths'];
         }
       });
+    console.log(csv_data);
 
     // trim to just the dates we want
     var cases_data = [];
@@ -138,17 +139,17 @@ function prepData(casesdeaths) {
 
     // sort data and nest by countries
     data = d3.nest()
-      .key(function(d) { return d.GeoId; })
+      .key(function(d) { return d.geoId; })
       .entries(cases_data);
 
     // get earliest date from data for each country
     data.forEach(function(d) {
-      countries[d.key]['firstdate'] = d.values[0].DateRep;
+      countries[d.key]['firstdate'] = d.values[0].dateRep;
     });
 
     // Get latest update date from data and write to page
     var formatTime = d3.timeFormat("%B %d, %Y");
-    $('#latest_update').html(formatTime(d3.max(cases_data, function(d) { return d.DateRep; })));
+    $('#latest_update').html(formatTime(d3.max(cases_data, function(d) { return d.dateRep; })));
 
     drawGraph(data,cases_data,countries);
 
@@ -203,7 +204,7 @@ svg = d3.select("#graph")
   // OLD x-axis code for dates
   // var x = d3.scaleTime()
   //   .range([ 0, width ])
-  //   .domain(d3.extent(cases_data, function(d) { return d.DateRep; }));
+  //   .domain(d3.extent(cases_data, function(d) { return d.dateRep; }));
   // svg.append("g")
   //   .attr("transform", "translate(0," + height + ")")
   //   .call(d3.axisBottom(x));
@@ -211,7 +212,7 @@ svg = d3.select("#graph")
   // Add linear x-axis in days
   var x = d3.scaleLinear()
     .range([ 0, width ])
-    .domain([0,d3.max(cases_data, function(d) { return Math.ceil(Math.abs(d.DateRep - countries[d.GeoId].firstdate) / (1000 * 60 * 60 * 24)) } )]);
+    .domain([0,d3.max(cases_data, function(d) { return Math.ceil(Math.abs(d.dateRep - countries[d.geoId].firstdate) / (1000 * 60 * 60 * 24)) } )]);
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x))
@@ -228,7 +229,7 @@ svg = d3.select("#graph")
 
   // Add the lines
   var line = d3.line()
-    .x(function(d) { return x(Math.ceil(Math.abs(d.DateRep - countries[d.GeoId].firstdate) / (1000 * 60 * 60 * 24))) })
+    .x(function(d) { return x(Math.ceil(Math.abs(d.dateRep - countries[d.geoId].firstdate) / (1000 * 60 * 60 * 24))) })
     .y(function(d) { return y(d[cd[r]]) });
   svg.selectAll("myLines")
     .data(data)
@@ -249,7 +250,7 @@ svg = d3.select("#graph")
       .append('g')
       .append("circle")
         .datum(function(d) { return {name: d.key, value: d.values[d.values.length - 1]}; }) // keep only the last value of each time series
-        .attr("cx", function(d) { return x(Math.ceil(Math.abs(d.value.DateRep - countries[d.value.GeoId].firstdate) / (1000 * 60 * 60 * 24))) })
+        .attr("cx", function(d) { return x(Math.ceil(Math.abs(d.value.dateRep - countries[d.value.geoId].firstdate) / (1000 * 60 * 60 * 24))) })
         .attr("cy", function(d) { return y(d.value[cd[r]]) })
         .attr("r", 2)
         .style("fill", function(d){ return myColor(d.name) })
@@ -264,10 +265,10 @@ svg = d3.select("#graph")
       .append('g')
       .append("text")
         .datum(function(d) { return {name: d.key, value: d.values[d.values.length - 1]}; }) // keep only the last value of each time series
-        .attr("transform", function(d) { return "translate(" + x(Math.ceil(Math.abs(d.value.DateRep - countries[d.value.GeoId].firstdate) / (1000 * 60 * 60 * 24))) + "," + y(d.value[cd[r]]) + ")"; }) // Put the text at the position of the last point
+        .attr("transform", function(d) { return "translate(" + x(Math.ceil(Math.abs(d.value.dateRep - countries[d.value.geoId].firstdate) / (1000 * 60 * 60 * 24))) + "," + y(d.value[cd[r]]) + ")"; }) // Put the text at the position of the last point
         .attr("x", 6) // shift the text a bit more right
         .attr("y", 4) // shift the text a bit more right
-        .text(function(d) { return d.value['Countries and territories'].replace(/\_/g, " ");; })
+        .text(function(d) { return d.value.countriesAndTerritories.replace(/\_/g, " ");; })
         .style("fill", function(d){ return myColor(d.name) })
         .style("font-size", 12)
         .attr("id", function(d){ return 'label_'+d.name })
