@@ -22,7 +22,7 @@ $( document ).ready(function() {
     $('.country_checkbox').prop('checked', false);
     });
 
-  var personal = ['UK','IT','FR','EL','US'];
+  var personal = ['UK','IT','FR','EL','US','UZ'];
 
   $( "#personal" ).click(function() {
     $('.line').removeClass('grey_line');
