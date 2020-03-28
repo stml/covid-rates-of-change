@@ -85,7 +85,7 @@ function prepData(casesdeaths) {
     // CSV Column Headers:
     // DateRep,Day,Month,Year,Cases,Deaths,Countries and territories,geoId
 
-    parseDate = d3.timeParse("%d-%m-%Y");
+    parseDate = d3.timeParse("%d/%m/%Y");
 
     // (re-)initialise these arrays at each pass
     var countries = [];
