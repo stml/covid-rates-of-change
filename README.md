@@ -32,7 +32,7 @@
         <option value="100" selected>100</option>
         <option value="1000">1000</option>
       </select> <span id="casedeath">cases</span>.</p>
-    <p>Data from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a> / Code at <a href="https://github.com/stml/covid-rates-of-change">GitHub</a>.</p>
+    <p>Visualisation design based on the <a href="https://www.ft.com/coronavirus-latest">Financial Times</a> / Data from the <a href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">European Centre for Disease Prevention and Control</a> / Code at <a href="https://github.com/stml/covid-rates-of-change">GitHub</a>.</p>
     <p>Latest data <span id="latest_update">..</span>.</p>
   </div>
   </div>
