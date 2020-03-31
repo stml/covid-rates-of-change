@@ -45,6 +45,7 @@
 
   <div class="row">
     <div class="column">
+      <button id="toggle-scale">Linear Scale</button>
       <button id="toggle-axes">Toggle Axes</button>
       <button id="toggle-labels">Toggle Labels</button>
       <button id="toggle-colours">Toggle Colours</button>

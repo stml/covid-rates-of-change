@@ -4,6 +4,7 @@ var svg;
 var casesdeaths = 'Cases';
 var cd = ['cumulativeCases','cumulativeDeaths'];
 var r;
+var scale = 'log';
 
 $( document ).ready(function() {
 
@@ -73,6 +74,19 @@ $( document ).ready(function() {
     prepData(casesdeaths);
     });
 
+  $('#toggle-scale').click( function() {
+      if (scale == 'log') {
+        scale = 'linear';
+        $('#toggle-scale').html('Log Scale');
+      }
+      else {
+        scale = 'log';
+        $('#toggle_scale').html('Linear Scale');
+      }
+      clearGraph();
+      prepData(casesdeaths);
+      });
+
   });
 
 function prepData(casesdeaths) {
@@ -115,7 +129,7 @@ function prepData(casesdeaths) {
         d.cumulativeDeaths = countries[d.geoId]['deaths'];
         }
       });
-    console.log(csv_data);
+    // console.log(csv_data);
 
     // trim to just the dates we want
     var cases_data = [];
@@ -151,7 +165,7 @@ function prepData(casesdeaths) {
     var formatTime = d3.timeFormat("%B %d, %Y");
     $('#latest_update').html(formatTime(d3.max(cases_data, function(d) { return d.dateRep; })));
 
-    drawGraph(data,cases_data,countries);
+    drawGraph(scale,data,cases_data,countries);
 
     // Add all the checkboxes
     for(country in countries) {
@@ -177,7 +191,7 @@ function clearGraph() {
   $('#graph_box').remove();
   }
 
-function drawGraph(data,cases_data,countries) {
+function drawGraph(scale,data,cases_data,countries) {
 
 // set the dimensions and margins of the graph
 var margin = {top: 25, right: 50, bottom: 35, left: 50},
@@ -218,14 +232,22 @@ svg = d3.select("#graph")
     .call(d3.axisBottom(x))
     .attr("id","x_axis");
 
-  // Add Y axis
+  // Y axis
+  if (scale == "log") {
   var y = d3.scaleLog()
     .range([ height, 1 ])
     .domain([first_limit, d3.max(cases_data, function(d) { return d[cd[r]]; })]);
   svg.append("g")
     .call(d3.axisLeft(y).ticks(10, "~s"))
     .attr("id","y_axis");
-
+  } else {
+    var y = d3.scaleLinear()
+      .range([ height, 1 ])
+      .domain([first_limit, d3.max(cases_data, function(d) { return d[cd[r]]; })]);
+    svg.append("g")
+      .call(d3.axisLeft(y).ticks(10, "~s"))
+      .attr("id","y_axis");
+  }
 
   // Add the lines
   var line = d3.line()
