@@ -209,6 +209,7 @@ function prepData() {
 function clearGraph() {
   d3.selectAll("svg > *").remove();
   $('#graph_box').remove();
+  $('#selectors li').remove();
   }
 
 function drawGraph(scale,data,cases_data,countries) {
