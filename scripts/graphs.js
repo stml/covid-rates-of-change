@@ -1,9 +1,11 @@
 var first_limit = 100;
 
 var svg;
+var cumulativenew = 'Cumulative';
 var casesdeaths = 'Cases';
-var cd = ['cumulativeCases','cumulativeDeaths'];
+var cd = ['cumulativeCases','cumulativeDeaths','cases','deaths'];
 var r;
+var r_cumulative;
 var scale = 'log';
 
 $( document ).ready(function() {
@@ -64,14 +66,24 @@ $( document ).ready(function() {
   $('#first_limit').change( function() {
     first_limit = this.value;
     clearGraph();
-    prepData(casesdeaths);
+    prepData();
     });
 
   $('#casesdeaths').change( function() {
     casesdeaths = this.value;
     $('#casedeath').html(casesdeaths.toLowerCase());
     clearGraph();
-    prepData(casesdeaths);
+    prepData();
+    });
+
+  $('#cumulativenew').change( function() {
+    cumulativenew = this.value;
+    if (cumulativenew = 'New') {
+      scale = 'linear';
+      $('#toggle-scale').html('Log Scale');
+    }
+    clearGraph();
+    prepData();
     });
 
   $('#toggle-scale').click( function() {
@@ -84,12 +96,12 @@ $( document ).ready(function() {
         $('#toggle_scale').html('Linear Scale');
       }
       clearGraph();
-      prepData(casesdeaths);
+      prepData();
       });
 
   });
 
-function prepData(casesdeaths) {
+function prepData() {
   //Read the data
   d3.csv("data/covid.csv").then(function(csv_data) {
 
@@ -134,16 +146,24 @@ function prepData(casesdeaths) {
     // trim to just the dates we want
     var cases_data = [];
 
-    // are we doing cases or deaths?
-    if (casesdeaths == 'Cases') {
+    // are we doing cases or deaths, cumulative or new?
+    if (casesdeaths == 'Cases' && cumulativenew == 'Cumulative') {
       r = '0';
-    } else {
+      r_cumulative = '0';
+    } else if (casesdeaths == 'Deaths' && cumulativenew == 'Cumulative') {
       r = '1';
+      r_cumulative = '1';
+    } else if (casesdeaths == 'Cases' && cumulativenew == 'New') {
+      r = '2';
+      r_cumulative = '0';
+    } else {
+      r = '3';
+      r_cumulative = '1';
     }
 
     // New array only with entries where cumulative total >= 100
     csv_data.forEach(function(d) {
-      if (d[cd[r]] >= first_limit) {
+      if (d[cd[r_cumulative]] >= first_limit) {
         cases_data.push(d)
         }
       });
@@ -232,18 +252,23 @@ svg = d3.select("#graph")
     .call(d3.axisBottom(x))
     .attr("id","x_axis");
 
+  var lowerlimit = first_limit;
+  if (cumulativenew == 'New') {
+    lowerlimit = 1;
+  }
+
   // Y axis
   if (scale == "log") {
   var y = d3.scaleLog()
     .range([ height, 1 ])
-    .domain([first_limit, d3.max(cases_data, function(d) { return d[cd[r]]; })]);
+    .domain([lowerlimit, d3.max(cases_data, function(d) { return d[cd[r]]; })]);
   svg.append("g")
     .call(d3.axisLeft(y).ticks(10, "~s"))
     .attr("id","y_axis");
   } else {
     var y = d3.scaleLinear()
       .range([ height, 1 ])
-      .domain([first_limit, d3.max(cases_data, function(d) { return d[cd[r]]; })]);
+      .domain([lowerlimit, d3.max(cases_data, function(d) { return d[cd[r]]; })]);
     svg.append("g")
       .call(d3.axisLeft(y).ticks(10, "~s"))
       .attr("id","y_axis");

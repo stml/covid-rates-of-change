@@ -21,7 +21,10 @@
 
   <div class="row">
     <div class="column">
-    <p>Cumulative number of
+    <p><select id="cumulativenew">
+      <option value="Cumulative" selected>Cumulative</option>
+      <option value="New">New</option>
+    </select> number of
       <select id="casesdeaths">
         <option value="Cases" selected>cases</option>
         <option value="Deaths">deaths</option>
