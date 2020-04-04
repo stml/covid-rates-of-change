@@ -248,6 +248,7 @@ svg = d3.select("#graph")
   var x = d3.scaleLinear()
     .range([ 0, width ])
     .domain([0,d3.max(cases_data, function(d) { return Math.ceil(Math.abs(d.dateRep - countries[d.geoId].firstdate) / (1000 * 60 * 60 * 24)) } )]);
+    // .domain([0, 40]);
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x))
